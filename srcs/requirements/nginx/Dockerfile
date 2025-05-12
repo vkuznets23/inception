@@ -1,22 +1,20 @@
 FROM alpine:3.20.6
 
-# Install Nginx, OpenSSL, and Bash
-RUN apk update && \
-    apk add nginx openssl bash
-
-#generate SSL certificate
-RUN mkdir -p /etc/nginx/ssl && \
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-        -keyout /etc/nginx/ssl/nginx.key \
-        -out /etc/nginx/ssl/nginx.crt \
-        -subj "/CN=localhost"
-
-#create simple HTML page
-RUN mkdir -p /var/www/html && \
-    echo "<h1>Hello from NGINX in Docker!</h1>" > /var/www/html/index.html
-COPY nginx.conf /etc/nginx/nginx.conf
+RUN apk update && apk add nginx openssl
 
 EXPOSE 443
 
-ENTRYPOINT [ "nginx", "-g", "daemon off;" ]
+RUN mkdir -p /etc/nginx/ssl
+
+RUN openssl req -x509 -nodes \
+    -out /etc/nginx/ssl/public_certificate.crt \
+    -keyout /etc/nginx/ssl/private.key \
+    -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=tmenkovi.42.fr"
+
+RUN adduser -D -H -s /sbin/nologin -g www-data -G www-data www-data
+
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+RUN chmod 644 /etc/nginx/nginx.conf
+
+CMD ["nginx", "-c", "/etc/nginx/nginx.conf", "-g", "daemon off;"]
 

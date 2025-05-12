@@ -1,21 +1,13 @@
 FROM alpine:3.20.6
 
-# Install MariaDB and dependencies
-RUN apk update && apk add mariadb mariadb-client mariadb-common bash
+RUN apk update && apk add mariadb mariadb-client 
 
-# Create necessary directories and set permissions
-RUN mkdir -p /run/mysqld && \
-    mkdir -p /var/log/mysql && \
-    chown -R mysql:mysql /run/mysqld && \
-    chown -R mysql:mysql /var/log/mysql
+COPY ./conf/mariadb_config /etc/my.cnf.d/mariadb_config 
+RUN chmod 644 /etc/my.cnf.d/mariadb_config
 
-# Copy MariaDB configuration and entrypoint script
-COPY tools/my.cnf /etc/my.cnf.d/mariadb-server.cnf
-COPY tools/mariadb-entrypoint.sh /usr/local/bin
+COPY ./tools/mariadb-script.sh /usr/local/bin/mariadb-script.sh 
+RUN chmod +x /usr/local/bin/mariadb-script.sh
 
-# Make entrypoint script executable
-RUN chmod +x /usr/local/bin/mariadb-entrypoint.sh
+EXPOSE 3306 
 
-# Use the entrypoint script to start MariaDB
-ENTRYPOINT ["mariadb-entrypoint.sh"]
-
+ENTRYPOINT ["mariadb-script.sh"]
