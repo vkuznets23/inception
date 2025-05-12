@@ -6,7 +6,7 @@ YELLOW=$(shell echo -e "\033[1;33m")
 RED=$(shell echo -e "\033[1;31m")
 
 # Paths
-DATA_DIR=/home/tmenkovi/data
+DATA_DIR=/home/vkuznets/data
 MARIADB_DIR=$(DATA_DIR)/mariadb
 WORDPRESS_DIR=$(DATA_DIR)/wordpress
 
