@@ -9,7 +9,7 @@ RUN mkdir -p /etc/nginx/ssl
 RUN openssl req -x509 -nodes \
     -out /etc/nginx/ssl/public_certificate.crt \
     -keyout /etc/nginx/ssl/private.key \
-    -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=tmenkovi.42.fr"
+    -subj "/C=FI/ST=Uusimaa/L=Helsinki/O=42/OU=Hive/CN=vkuznets.42.fr"
 
 RUN adduser -D -H -s /sbin/nologin -g www-data -G www-data www-data
 
